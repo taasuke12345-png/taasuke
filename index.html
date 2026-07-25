@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>気仙沼の風景 📸</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
   :root {
     --ink: #1b2a3a;
@@ -26,21 +27,10 @@
     text-align: center;
     padding: 1.2rem 1rem;
   }
-  header h1 {
-    font-size: clamp(1.2rem, 4vw, 1.8rem);
-    letter-spacing: 0.1em;
-  }
-  header p {
-    font-size: 0.85rem;
-    opacity: 0.85;
-    margin-top: 0.3rem;
-  }
+  header h1 { font-size: clamp(1.2rem, 4vw, 1.8rem); letter-spacing: 0.1em; }
+  header p { font-size: 0.85rem; opacity: 0.85; margin-top: 0.3rem; }
 
-  .container {
-    max-width: 700px;
-    margin: 0 auto;
-    padding: 1.2rem 1rem 3rem;
-  }
+  .container { max-width: 700px; margin: 0 auto; padding: 1.2rem 1rem 3rem; }
 
   .post-form {
     background: var(--card-bg);
@@ -56,16 +46,8 @@
     border-left: 4px solid var(--accent);
     padding-left: 0.6rem;
   }
-  .form-row {
-    margin-bottom: 0.8rem;
-  }
-  .form-row label {
-    display: block;
-    font-size: 0.85rem;
-    font-weight: 700;
-    margin-bottom: 0.3rem;
-    color: #445;
-  }
+  .form-row { margin-bottom: 0.8rem; }
+  .form-row label { display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.3rem; color: #445; }
   .form-row input[type="text"],
   .form-row textarea,
   .form-row select {
@@ -81,15 +63,8 @@
   }
   .form-row input[type="text"]:focus,
   .form-row textarea:focus,
-  .form-row select:focus {
-    outline: none;
-    border-color: var(--wave);
-    background: #fff;
-  }
-  .form-row textarea {
-    resize: vertical;
-    min-height: 80px;
-  }
+  .form-row select:focus { outline: none; border-color: var(--wave); background: #fff; }
+  .form-row textarea { resize: vertical; min-height: 80px; }
 
   .photo-label {
     display: flex;
@@ -108,16 +83,8 @@
   .photo-label:hover { background: #e0f0f8; }
   .photo-label input { display: none; }
 
-  #preview-wrap {
-    margin-top: 0.6rem;
-    display: none;
-  }
-  #preview-wrap img {
-    width: 100%;
-    max-height: 220px;
-    object-fit: cover;
-    border-radius: 8px;
-  }
+  #preview-wrap { margin-top: 0.6rem; display: none; }
+  #preview-wrap img { width: 100%; max-height: 220px; object-fit: cover; border-radius: 8px; }
 
   .btn-post {
     width: 100%;
@@ -134,20 +101,13 @@
     margin-top: 0.4rem;
   }
   .btn-post:hover { background: #a83518; }
+  .btn-post:disabled { background: #aaa; cursor: not-allowed; }
 
-  .posts-header {
-    font-size: 0.95rem;
-    font-weight: 700;
-    color: #445;
-    margin-bottom: 0.8rem;
-  }
+  .posts-header { font-size: 0.95rem; font-weight: 700; color: #445; margin-bottom: 0.8rem; }
 
-  .no-posts {
-    text-align: center;
-    color: #888;
-    padding: 2rem;
-    font-size: 0.9rem;
-  }
+  .no-posts { text-align: center; color: #888; padding: 2rem; font-size: 0.9rem; }
+
+  .loading { text-align: center; color: #888; padding: 2rem; font-size: 0.9rem; }
 
   .card {
     background: var(--card-bg);
@@ -156,15 +116,8 @@
     margin-bottom: 1.2rem;
     overflow: hidden;
   }
-  .card img {
-    width: 100%;
-    max-height: 280px;
-    object-fit: cover;
-    display: block;
-  }
-  .card-body {
-    padding: 0.9rem 1rem;
-  }
+  .card img { width: 100%; max-height: 280px; object-fit: cover; display: block; }
+  .card-body { padding: 0.9rem 1rem; }
   .card-meta {
     display: flex;
     justify-content: space-between;
@@ -173,11 +126,7 @@
     flex-wrap: wrap;
     gap: 0.3rem;
   }
-  .card-name {
-    font-weight: 700;
-    font-size: 0.9rem;
-    color: var(--wave);
-  }
+  .card-name { font-weight: 700; font-size: 0.9rem; color: var(--wave); }
   .card-location {
     font-size: 0.8rem;
     background: #f0f7fb;
@@ -185,17 +134,8 @@
     border-radius: 20px;
     padding: 0.15rem 0.7rem;
   }
-  .card-date {
-    font-size: 0.78rem;
-    color: #888;
-    width: 100%;
-  }
-  .card-comment {
-    font-size: 0.92rem;
-    line-height: 1.7;
-    color: var(--ink);
-    margin-top: 0.4rem;
-  }
+  .card-date { font-size: 0.78rem; color: #888; width: 100%; }
+  .card-comment { font-size: 0.92rem; line-height: 1.7; color: var(--ink); margin-top: 0.4rem; }
   .btn-delete {
     margin-top: 0.7rem;
     background: none;
@@ -207,10 +147,7 @@
     cursor: pointer;
     transition: all 0.2s;
   }
-  .btn-delete:hover {
-    border-color: var(--accent);
-    color: var(--accent);
-  }
+  .btn-delete:hover { border-color: var(--accent); color: var(--accent); }
 
   .toast {
     position: fixed;
@@ -227,10 +164,7 @@
     z-index: 999;
     white-space: nowrap;
   }
-  .toast.show {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 </style>
 </head>
 <body>
@@ -269,7 +203,7 @@
     </div>
 
     <div class="form-row">
-      <label>写真</label>
+      <label>写真（任意）</label>
       <label class="photo-label">
         <span>📷</span>
         <span id="photo-label-text">写真を選ぶ</span>
@@ -289,23 +223,16 @@
   </div>
 
   <div class="posts-header" id="posts-header">投稿一覧</div>
-  <div id="posts-list"></div>
+  <div id="posts-list"><div class="loading">読み込み中...</div></div>
 
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
-  const STORAGE_KEY = 'kesennuma_posts';
-
-  function loadPosts() {
-    try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; }
-    catch { return []; }
-  }
-
-  function savePosts(posts) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(posts));
-  }
+  const SUPABASE_URL = 'https://xcjidoulfzrwxrepjhcf.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_9wQPSjSQzP6Ed8k4r8gV2Q_EwMStwtG';
+  const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
   function showToast(msg) {
     const t = document.getElementById('toast');
@@ -320,40 +247,52 @@
   }
 
   function escapeHtml(str) {
-    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
 
-  function renderPosts() {
-    const posts = loadPosts();
+  async function renderPosts() {
     const list = document.getElementById('posts-list');
-    document.getElementById('posts-header').textContent = `投稿一覧（${posts.length}件）`;
+    list.innerHTML = '<div class="loading">読み込み中...</div>';
 
-    if (posts.length === 0) {
+    const { data, error } = await db
+      .from('posts')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      list.innerHTML = '<div class="no-posts">読み込みに失敗しました。ページを更新してください。</div>';
+      return;
+    }
+
+    document.getElementById('posts-header').textContent = `投稿一覧（${data.length}件）`;
+
+    if (data.length === 0) {
       list.innerHTML = '<div class="no-posts">まだ投稿がありません。最初の一枚を投稿してみましょう！</div>';
       return;
     }
 
-    list.innerHTML = posts.slice().reverse().map(p => `
+    list.innerHTML = data.map(p => `
       <div class="card">
-        ${p.photo ? `<img src="${p.photo}" alt="投稿画像">` : ''}
+        ${p.photo_url ? `<img src="${p.photo_url}" alt="投稿画像">` : ''}
         <div class="card-body">
           <div class="card-meta">
             <span class="card-name">👤 ${escapeHtml(p.name || '匿名')}</span>
             ${p.location ? `<span class="card-location">📍 ${escapeHtml(p.location)}</span>` : ''}
-            <span class="card-date">${formatDate(p.date)}</span>
+            <span class="card-date">${formatDate(p.created_at)}</span>
           </div>
           ${p.comment ? `<div class="card-comment">${escapeHtml(p.comment)}</div>` : ''}
-          <button class="btn-delete" onclick="deletePost('${p.id}')">削除</button>
+          <button class="btn-delete" onclick="deletePost(${p.id})">削除</button>
         </div>
       </div>
     `).join('');
   }
 
-  function deletePost(id) {
+  async function deletePost(id) {
     if (!confirm('この投稿を削除しますか？')) return;
-    savePosts(loadPosts().filter(p => p.id !== id));
-    renderPosts();
+    const { error } = await db.from('posts').delete().eq('id', id);
+    if (error) { showToast('削除できませんでした'); return; }
     showToast('削除しました');
+    renderPosts();
   }
 
   let photoData = null;
@@ -365,14 +304,14 @@
     reader.onload = function(e) {
       const img = new Image();
       img.onload = function() {
-        const MAX = 900;
+        const MAX = 800;
         let w = img.width, h = img.height;
         if (w > MAX) { h = Math.round(h * MAX / w); w = MAX; }
         if (h > MAX) { w = Math.round(w * MAX / h); h = MAX; }
         const canvas = document.createElement('canvas');
         canvas.width = w; canvas.height = h;
         canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-        photoData = canvas.toDataURL('image/jpeg', 0.75);
+        photoData = canvas.toDataURL('image/jpeg', 0.7);
         document.getElementById('preview-img').src = photoData;
         document.getElementById('preview-wrap').style.display = 'block';
         document.getElementById('photo-label-text').textContent = file.name;
@@ -382,7 +321,7 @@
     reader.readAsDataURL(file);
   });
 
-  document.getElementById('btn-post').addEventListener('click', function() {
+  document.getElementById('btn-post').addEventListener('click', async function() {
     const name = document.getElementById('inp-name').value.trim();
     const location = document.getElementById('inp-location').value;
     const comment = document.getElementById('inp-comment').value.trim();
@@ -391,13 +330,22 @@
     if (!location) { showToast('場所を選んでください'); return; }
     if (!photoData && !comment) { showToast('写真またはコメントを入力してください'); return; }
 
-    const posts = loadPosts();
-    posts.push({ id: Date.now().toString(), name, location, comment, photo: photoData, date: new Date().toISOString() });
+    const btn = document.getElementById('btn-post');
+    btn.disabled = true;
+    btn.textContent = '投稿中...';
 
-    try {
-      savePosts(posts);
-    } catch(e) {
-      showToast('保存できませんでした。古い投稿を削除してください');
+    const { error } = await db.from('posts').insert([{
+      name,
+      location,
+      comment,
+      photo_url: photoData || null
+    }]);
+
+    btn.disabled = false;
+    btn.textContent = '投稿する';
+
+    if (error) {
+      showToast('投稿できませんでした。もう一度お試しください');
       return;
     }
 
@@ -409,9 +357,8 @@
     document.getElementById('photo-label-text').textContent = '写真を選ぶ';
     photoData = null;
 
-    renderPosts();
     showToast('投稿しました！');
-    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    renderPosts();
   });
 
   renderPosts();
