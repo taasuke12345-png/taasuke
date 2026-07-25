@@ -136,8 +136,29 @@
   }
   .card-date { font-size: 0.78rem; color: #888; width: 100%; }
   .card-comment { font-size: 0.92rem; line-height: 1.7; color: var(--ink); margin-top: 0.4rem; }
-  .btn-delete {
+  .card-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
     margin-top: 0.7rem;
+  }
+  .btn-like {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    background: none;
+    border: 1.5px solid #f0c0c0;
+    border-radius: 20px;
+    padding: 0.3rem 0.9rem;
+    font-size: 0.88rem;
+    color: #e05555;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: inherit;
+  }
+  .btn-like:hover { background: #fff0f0; border-color: #e05555; }
+  .btn-like.liked { background: #fff0f0; border-color: #e05555; font-weight: 700; }
+  .btn-delete {
     background: none;
     border: 1px solid #ddd;
     border-radius: 6px;
@@ -146,6 +167,7 @@
     color: #999;
     cursor: pointer;
     transition: all 0.2s;
+    font-family: inherit;
   }
   .btn-delete:hover { border-color: var(--accent); color: var(--accent); }
 
@@ -281,10 +303,24 @@
             <span class="card-date">${formatDate(p.created_at)}</span>
           </div>
           ${p.comment ? `<div class="card-comment">${escapeHtml(p.comment)}</div>` : ''}
-          <button class="btn-delete" onclick="deletePost(${p.id})">削除</button>
+          <div class="card-actions">
+            <button class="btn-like" onclick="likePost(${p.id}, ${p.likes || 0}, this)">
+              ❤️ <span>${p.likes || 0}</span>
+            </button>
+            <button class="btn-delete" onclick="deletePost(${p.id})">削除</button>
+          </div>
         </div>
       </div>
     `).join('');
+  }
+
+  async function likePost(id, currentLikes, btn) {
+    const newCount = currentLikes + 1;
+    const { error } = await db.from('posts').update({ likes: newCount }).eq('id', id);
+    if (error) { showToast('いいねできませんでした'); return; }
+    btn.classList.add('liked');
+    btn.querySelector('span').textContent = newCount;
+    btn.onclick = null;
   }
 
   async function deletePost(id) {
